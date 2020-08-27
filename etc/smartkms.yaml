@@ -1,6 +1,4 @@
 ---
-web:
-    http:
-        addr: 0.0.0.0:8080
-    https:
-        addr: 0.0.0.0:8443
+debug: false
+db:
+    password: 881019

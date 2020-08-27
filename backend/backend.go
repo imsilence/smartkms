@@ -76,6 +76,11 @@ func NewBackendWithConfigFile(path string) (*Backend, error) {
 
 // NewBackendWithConfig 根据配置创建后端服务
 func NewBackendWithConfig(config *Config) (*Backend, error) {
+	if config.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	gin.DisableConsoleColor()
 
 	engine := gin.New()

@@ -7,12 +7,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var config string
+
 var backendCmd = &cobra.Command{
 	Use:   "backend",
 	Short: "Smark KMS Backend Server",
 	Long:  "Smark KMS Backend Server",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		app, err := backend.InitApp()
+		app, err := backend.InitAppWithConfigFile(config)
 		if err != nil {
 			return err
 		}
@@ -25,5 +27,6 @@ var backendCmd = &cobra.Command{
 }
 
 func init() {
+	backendCmd.Flags().StringVarP(&config, "config", "c", "etc/smartkms.yaml", "config file")
 	rootCmd.AddCommand(backendCmd)
 }
