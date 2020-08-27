@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/imsilence/smartkms/backend"
+	"github.com/imsilence/smartkms/backend/request"
 	"github.com/imsilence/smartkms/backend/utils"
 )
 
@@ -13,9 +14,9 @@ type dataService struct {
 }
 
 // Encrypt 对数据加密
-func (s *dataService) Encrypt(appKey, plaintext string) (string, error) {
+func (s *dataService) Encrypt(req *request.EncryptRequest) (string, error) {
 	// 获取应用key密钥
-	kek, err := KekService.GetByAppKey(appKey)
+	kek, err := KekService.GetByAppKey(req.AppKey)
 	if err != nil {
 		return "", err
 	}
@@ -27,7 +28,7 @@ func (s *dataService) Encrypt(appKey, plaintext string) (string, error) {
 	}
 
 	// 使用数据密钥对数据解密
-	dataCiphertext, err := utils.AESGCMEncodeString(key, plaintext)
+	dataCiphertext, err := utils.AESGCMEncodeString(key, req.Plaintext)
 	if err != nil {
 		return "", err
 	}
@@ -49,9 +50,9 @@ func (s *dataService) Encrypt(appKey, plaintext string) (string, error) {
 }
 
 // Decrypt 对数据解密
-func (s *dataService) Decrypt(appKey, ciphertext string) (string, error) {
+func (s *dataService) Decrypt(req *request.DecryptRequest) (string, error) {
 	// 分割数据密钥密文和数据密文
-	texts := strings.SplitN(ciphertext, "$$", 2)
+	texts := strings.SplitN(req.Ciphertext, "$$", 2)
 	if len(texts) < 2 {
 		return "", errors.New("ciphertext error")
 	}
@@ -59,7 +60,7 @@ func (s *dataService) Decrypt(appKey, ciphertext string) (string, error) {
 	keyCiphertext, dataCiphertext := texts[0], texts[1]
 
 	// 获取应用Key密钥
-	kek, err := KekService.GetByAppKey(appKey)
+	kek, err := KekService.GetByAppKey(req.AppKey)
 	if err != nil {
 		return "", err
 	}

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/imsilence/smartkms/backend/response"
+	"github.com/imsilence/smartkms/backend/common/response"
 	"github.com/imsilence/smartkms/backend/services"
 )
 

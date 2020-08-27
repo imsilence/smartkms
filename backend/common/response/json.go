@@ -22,11 +22,21 @@ func JSON(ctx *gin.Context, result interface{}, err error) {
 	}
 }
 
+// JSONBadRequest 响应
+func JSONBadRequest(ctx *gin.Context, err error) {
+	ctx.JSON(http.StatusOK, BadRequest(err))
+}
+
+// JSONUnauthorized 响应
+func JSONUnauthorized(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, Unauthorized())
+}
+
 // Ok 构建Response对象
 func Ok(result interface{}) *Response {
 	return &Response{
 		Code:   200,
-		Text:   "",
+		Text:   "OK",
 		Result: result,
 	}
 }
@@ -34,8 +44,26 @@ func Ok(result interface{}) *Response {
 // InternalServerError 构建Response对象
 func InternalServerError(err error) *Response {
 	return &Response{
-		Code:   500,
+		Code:   http.StatusBadRequest,
 		Text:   err.Error(),
+		Result: nil,
+	}
+}
+
+// BadRequest 构建Response对象
+func BadRequest(err error) *Response {
+	return &Response{
+		Code:   http.StatusBadRequest,
+		Text:   err.Error(),
+		Result: nil,
+	}
+}
+
+// Unauthorized 构建Response对象
+func Unauthorized() *Response {
+	return &Response{
+		Code:   http.StatusUnauthorized,
+		Text:   http.StatusText(http.StatusUnauthorized),
 		Result: nil,
 	}
 }
